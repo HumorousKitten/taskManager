@@ -1,0 +1,53 @@
+.modal {
+	border: 1px solid black;
+	bottom: 0;
+	position: absolute;
+	animation: ModalAnimation .5s linear forwards;
+	margin-top: 300px;
+	border-radius: 10px;
+	padding: 20px;
+	display: flex;
+	flex-direction: column;
+}
+
+@keyframes ModalAnimation {
+	0% {
+		bottom: 0;
+		opacity: 0;
+	}
+
+	50% {
+		opacity: .5;
+	}
+
+  100% {
+		transform: translate(0px, -4vh);
+		opacity: 1;
+	}
+}
+
+.title {
+	font-size: 1.25rem;
+}
+
+.modal input {
+	padding: 0.3125rem;
+	border: 1px solid rgb(139, 137, 137);
+	border-radius: 0.3125rem;
+	margin-top: 0.625rem;
+}
+
+.incorrectValue {
+	color: red;
+	font-size: 0.9375rem;
+}
+
+.modal button {
+	color: #ffffff;
+	background: #2D609B;
+	width: 5rem;
+	padding: 0.313rem 0.625rem 0.313rem 0.625rem;
+	border-radius: 0.625rem;
+	align-self: center;
+	margin-top: 0.625rem;
+}

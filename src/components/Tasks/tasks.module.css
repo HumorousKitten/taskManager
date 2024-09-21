@@ -1,0 +1,34 @@
+.tasks {
+	display: flex;
+	flex-direction: column;
+	border: 3px solid red;
+}
+
+.list {
+	flex-grow: 1;
+	overflow-y: auto;
+	/* border: 10px solid yellow; */
+	padding: 2.5rem;
+}
+
+.list li {
+	background: #ffffff;
+	border-radius: 0.625rem;
+	padding: 1.25rem;
+}
+
+.list li + li{
+	margin-top: 0.625rem;
+}
+
+.addCategory {
+	border: 3px solid green;
+	position: relative;
+	/* align-self: flex-end; */
+	/* padding-left: 20px;
+	padding-bottom: 20px; */
+}
+
+.addCategory > button{
+	width: 18.75rem;
+}

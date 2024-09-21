@@ -1,0 +1,38 @@
+.categories {
+	padding: 2.5rem;
+	position: relative;
+	border-radius: 20px;
+	margin: 10px;
+	background: #ffffff;
+	
+}
+
+.title {
+	font-size: 1.5625rem;
+	font-weight: 600;
+	margin-bottom: 1.25rem;
+}
+
+.list {
+	height: 30vh;
+	margin-bottom: 130px;
+	overflow-y: auto;
+}
+
+.list li {
+	padding: 0.9375rem;
+	border-radius: 0.625rem;
+	transition: background .3s linear;
+}
+
+.list li:hover {
+	background: #F4F4F4;
+}
+
+.list li + li {
+	margin-top: 0.625rem;
+}
+
+.addCategory {
+	position: relative;
+}
