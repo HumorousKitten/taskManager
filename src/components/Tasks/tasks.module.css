@@ -28,6 +28,14 @@
 	margin-top: 0.625rem;
 }
 
+span[contenteditable = 'true'] {
+	display: block;
+	width: 10rem;
+	/* text-wrap: wrap; */
+  border: 1px solid #DBD7D2;
+	border-radius: 5px;
+}
+
 .titleInList {
 	display: flex;
 	align-items: center;	

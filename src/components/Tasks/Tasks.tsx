@@ -1,4 +1,4 @@
-import React, { FC, KeyboardEvent } from 'react'
+import React, { FC } from 'react'
 import { ICategories, ITasks } from '../../types/types'
 import { ModalTasks } from '../Modal/ModalTasks'
 import styles from './tasks.module.css'
@@ -13,15 +13,12 @@ interface ITasksProps {
 }
 
 
-
 const Tasks: FC<ITasksProps> = ({ category, categories, setCategory }) => {
 	const [isModal, setIsModal] = React.useState<boolean>(false)
 
 	const TASK_ID = React.useRef<number>(0)
-	const task = React.useRef<HTMLDivElement | null>(null)
+	const taskTextContent = React.useRef<HTMLSpanElement | null>(null)
 
-
-	React.useEffect(()=> {}, [])
 
 	function searchTaskById(id: number, task: ITasks[]) {
 		return task.find(task => task.id === id)
@@ -54,36 +51,25 @@ const Tasks: FC<ITasksProps> = ({ category, categories, setCategory }) => {
 		})
 	}
 
-
-	function handleEditTaskContent(e: KeyboardEvent<HTMLSpanElement>) {
-		if(e.key === 'Enter') {
-			const elements = Array.from(task.current?.children ?? [])
-			const idTask = elements[0].textContent ?? ''
-			const taskElement = elements[2]
-			const necessaryCategory = searchCategory(category, categories) as ICategories
-			const forEdittingTask = searchTaskById(+idTask, necessaryCategory.tasks)
-			setCategory((prev) => {
-				
-			})
-		}
+	function nameTaskValidate(value: string): boolean {
+		const taskName: RegExp =  /^(?=.{3,30}$).+$/
+		return taskName.test(value)
 	}
 
+
 	function editTask(e: React.MouseEvent<HTMLImageElement> ) {
-		const elements = Array.from(task.current?.children ?? [])
+		const taskName = taskTextContent.current
+		taskName?.setAttribute('contenteditable', 'true')
 
-		const taskElement = elements[2]
-		taskElement?.setAttribute('contenteditable', 'true')
-
-		// const handleEdit = (e: React.KeyboardEvent<HTMLSpanElement>) => {
-		// 	console.log(e)
-		// 	// const editedContent = e.currentTarget.innerText;
-		// 	// console.log(`Задача редактирована: ${editedContent}`);
-			
-		// 	// Здесь вы можете обновить состояние компонента
-		// 	// Например:
-		// 	// setTaskContent(editedContent);
-		// };
+		function handleEdit(e: KeyboardEvent) {
+			if (e.key === 'Enter') {
+				
+			}
+		};
 	
+		taskName?.addEventListener('keydown', handleEdit)
+
+
 		// Добавляем обработчик событий
 		// const necessaryCategory = searchCategory(category, categories) as ICategories
 
@@ -114,10 +100,10 @@ const Tasks: FC<ITasksProps> = ({ category, categories, setCategory }) => {
 							.find(item => item.name === category)
 							?.tasks.map(item => 
 							<li key={item.id}>
-								<div className={styles.titleInList} ref={task}>
+								<div className={styles.titleInList} >
 									<span className={styles.invisible}>{item.id}</span>
 									<input type="checkbox" />
-									<span onKeyDown={handleEditTaskContent}>{item.title}</span>
+									<span ref={taskTextContent}>{item.title}</span>
 								</div>
 								<div className={styles.useFullIcons}>
 									<img 

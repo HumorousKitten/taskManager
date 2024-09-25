@@ -26,7 +26,7 @@ export const ModalTasks: FC<IModalTasksProps> = ({categoryName, setCategory, isM
 
 
 	function nameValidate(value: string): boolean {
-		const taskName: RegExp =  /^(?=.{3,150}$).+$/
+		const taskName: RegExp =  /^(?=.{3,30}$).+$/
 		return taskName.test(value)
 	}
 
@@ -61,7 +61,7 @@ export const ModalTasks: FC<IModalTasksProps> = ({categoryName, setCategory, isM
 
 		if(!nameValidate(taskName)){
 			setIsError({
-				message: 'Длина задачи должна быть 3-150 символов',
+				message: 'Длина задачи должна быть 3-30 символов',
 				isError: true
 			})
 			return
