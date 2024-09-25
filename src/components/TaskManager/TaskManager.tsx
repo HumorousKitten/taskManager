@@ -11,6 +11,7 @@ import {ICategories } from '../../types/types';
 
 const TaskManager = (): ReactElement => {
 	const [categories, setCategories] = React.useState<ICategories[]>([])
+
 	const [nameCategory, setNameCategory] = React.useState<string>('')
 
 	return (

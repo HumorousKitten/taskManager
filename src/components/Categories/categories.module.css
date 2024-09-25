@@ -4,7 +4,6 @@
 	border-radius: 20px;
 	margin: 10px;
 	background: #ffffff;
-	
 }
 
 .title {
@@ -23,6 +22,9 @@
 	padding: 0.9375rem;
 	border-radius: 0.625rem;
 	transition: background .3s linear;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
 }
 
 .list li:hover {
@@ -31,6 +33,10 @@
 
 .list li + li {
 	margin-top: 0.625rem;
+}
+
+.list li > img{
+	cursor: pointer;
 }
 
 .addCategory {

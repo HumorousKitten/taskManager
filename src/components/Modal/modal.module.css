@@ -1,18 +1,17 @@
 .modal {
 	border: 1px solid black;
-	bottom: 0;
-	position: absolute;
 	animation: ModalAnimation .5s linear forwards;
-	margin-top: 300px;
 	border-radius: 10px;
 	padding: 20px;
 	display: flex;
 	flex-direction: column;
+	margin-bottom: 20px;
+
 }
 
 @keyframes ModalAnimation {
 	0% {
-		bottom: 0;
+		transform: translateX(-100%);
 		opacity: 0;
 	}
 
@@ -21,7 +20,7 @@
 	}
 
   100% {
-		transform: translate(0px, -4vh);
+		transform: translateX(0);
 		opacity: 1;
 	}
 }

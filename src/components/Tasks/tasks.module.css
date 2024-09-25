@@ -1,34 +1,56 @@
 .tasks {
 	display: flex;
 	flex-direction: column;
-	border: 3px solid red;
+}
+
+.tasks h1 {
+	font-size: 2rem;
+	margin-bottom: 1rem;
 }
 
 .list {
-	flex-grow: 1;
+	height: 70vh;
 	overflow-y: auto;
-	/* border: 10px solid yellow; */
 	padding: 2.5rem;
+	margin-bottom: 2vh;
 }
 
 .list li {
 	background: #ffffff;
 	border-radius: 0.625rem;
 	padding: 1.25rem;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
 }
 
 .list li + li{
 	margin-top: 0.625rem;
 }
 
+.titleInList {
+	display: flex;
+	align-items: center;	
+}
+
+.titleInList > input[type='checkbox'] {
+	margin-right: 10px;
+}
+
+.useFullIcons img + img{
+	margin-left: 0.625rem;
+}
+
 .addCategory {
-	border: 3px solid green;
-	position: relative;
-	/* align-self: flex-end; */
-	/* padding-left: 20px;
-	padding-bottom: 20px; */
+	width: 25rem;
 }
 
 .addCategory > button{
 	width: 18.75rem;
 }
+
+
+.invisible {
+	display: none;
+}
+
