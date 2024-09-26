@@ -10,7 +10,7 @@ interface ICategoriesProps {
 	setNameOfCategory: React.Dispatch<React.SetStateAction<string>>
 }
 
-const Categories: FC<ICategoriesProps> = ({
+const Categories: FC<ICategoriesProps> = React.memo(({
 	categories,
 	setCategory,
 	setNameOfCategory,
@@ -50,6 +50,7 @@ const Categories: FC<ICategoriesProps> = ({
 		<div className={styles.categories}>
 			<h2 className={styles.title}>Категории</h2>
 			<ul className={styles.list} onClick={selectCategory}>
+				<li><span>Completed</span></li>
 				{categories
 					? categories.map(item => {
 							return(
@@ -84,6 +85,6 @@ const Categories: FC<ICategoriesProps> = ({
 			</div>
 		</div>
 	)
-}
+})
 
 export default Categories
