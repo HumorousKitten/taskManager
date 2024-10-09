@@ -1,6 +1,7 @@
 import React, { FC } from 'react';
 import styles from './modal.module.css'
 import { ICategories } from '../../types/types';
+import { Updater } from 'use-immer'
 
 type TErrorMessage = 'Длина имени должна быть 3-21 символ' | 'название уже существует'
 
@@ -11,7 +12,7 @@ interface IError {
 
 interface IModalProps {
 	categories: ICategories[]
-	setCategory: React.Dispatch<React.SetStateAction<[] | ICategories[]>>
+	setCategory: Updater<ICategories[]>
 	isModal: React.Dispatch<React.SetStateAction<boolean>>
 	categoryId: React.MutableRefObject<number>
 }
@@ -28,15 +29,8 @@ export const Modal: FC<IModalProps> = ({categories, setCategory, isModal, catego
 		return categoryName.test(value)
 	}
 
- 
-
 	function addCategory(value: string) {
-		setCategory((prevState) => [...prevState, {
-				id: categoryId.current++,
-				name: value,
-				tasks: []
-			}]
-		)
+		setCategory((draft) => [...draft, {id: categoryId.current++, name: value, tasks: []}])
 	}
 
 

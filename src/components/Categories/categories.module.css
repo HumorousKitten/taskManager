@@ -26,6 +26,17 @@
 	align-items: center;
 	justify-content: space-between;
 	border: 1px solid #F4F4F4;
+	animation: animateList .5s linear forwards;
+}
+
+@keyframes animateList {
+	0% {
+		opacity: 0;
+	}
+
+	100% {
+		opacity: 1;
+	}
 }
 
 .list li:hover {

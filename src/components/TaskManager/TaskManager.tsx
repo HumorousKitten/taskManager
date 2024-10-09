@@ -1,5 +1,6 @@
 import React, {ReactElement } from 'react';
-import Categories from '../Categories/Categories';
+import { useImmer } from 'use-immer';
+import {MemoizedCategories as Categories} from '../Categories/Categories';
 import Tasks from '../Tasks/Tasks';
 import styles from './taskManager.module.css'
 import {ICategories } from '../../types/types';
@@ -10,14 +11,14 @@ import {ICategories } from '../../types/types';
 
 
 const TaskManager = (): ReactElement => {
-	const [categories, setCategories] = React.useState<ICategories[]>([])
-
+	// const [categories, setCategories] = React.useState<ICategories[]>([])
+	const [categories, updateCategories] = useImmer<ICategories[]>([{id: 0, name: 'Completed', tasks:[]}])
 	const [nameCategory, setNameCategory] = React.useState<string>('')
 
 	return (
 		<div className={styles.taskManager}>
-			<Categories categories = {categories} setCategory = {setCategories} setNameOfCategory={setNameCategory}/>
-			<Tasks category = {nameCategory} categories = {categories} setCategory = {setCategories} />
+			<Categories categories = {categories} setCategory = {updateCategories} setNameOfCategory={setNameCategory}/>
+			<Tasks category = {nameCategory} categories = {categories} setCategory = {updateCategories} />
 		</div>
 	);
 }

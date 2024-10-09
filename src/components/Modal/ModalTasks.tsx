@@ -1,8 +1,9 @@
 import React, { FC } from 'react';
 import styles from './modal.module.css'
 import { ICategories } from '../../types/types';
+import { Updater } from 'use-immer'
 
-type TErrorMessage = 'Длина задачи должна быть 3-150 символов'
+type TErrorMessage = 'Длина задачи должна быть 3-30 символов'
 
 interface IError {
 	message: TErrorMessage | ''
@@ -12,7 +13,7 @@ interface IError {
 
 interface IModalTasksProps {
 	categoryName: string
-	setCategory: React.Dispatch<React.SetStateAction<[] | ICategories[]>>
+	setCategory: Updater<ICategories[]>
 	isModal: React.Dispatch<React.SetStateAction<boolean>>
 	taskId: React.MutableRefObject<number>
 }
@@ -31,27 +32,15 @@ export const ModalTasks: FC<IModalTasksProps> = ({categoryName, setCategory, isM
 	}
 
 
-
+	
 	function addTask(task: string) {
-		setCategory(prevState => {
-			const selectedCategory = prevState.find(item => item.name === categoryName)
-			const updatedCategories = prevState.map(item => {
-				if (item.id === selectedCategory?.id) {
-					return {
-						...item,
-						tasks: [
-							...item.tasks,
-							{
-								id: taskId.current++,
-								title: task,
-								isCompleted: false,
-							},
-						],
-					}
-				}
-				return item
+		setCategory(draft => {
+			const selectedCategory = draft.find(item => item.name === categoryName)
+			selectedCategory?.tasks.push({
+				id: taskId.current++,
+				title: task,
+				isCompleted: false
 			})
-			return updatedCategories
 		})
 	}
 

@@ -22,6 +22,17 @@
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
+	animation: animateList .5s linear forwards;
+}
+
+@keyframes animateList {
+	0% {
+		opacity: 0;
+	}
+
+	100% {
+		opacity: 1;
+	}
 }
 
 .list li + li{
@@ -34,6 +45,20 @@ span[contenteditable = 'true'] {
 	/* text-wrap: wrap; */
   border: 1px solid #DBD7D2;
 	border-radius: 5px;
+}
+
+span[contenteditable = 'true']:not(:focus) {
+	animation: animateBorder 1s linear infinite;
+}
+
+@keyframes animateBorder {
+	0% {
+		border: 1px solid #DBD7D2;
+	}
+
+	100% {
+		border: 1px solid red;
+	}
 }
 
 .titleInList {

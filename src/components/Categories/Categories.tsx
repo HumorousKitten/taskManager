@@ -3,20 +3,21 @@ import { ICategories } from '../../types/types'
 import { Button } from '../button/Button'
 import { Modal } from '../Modal/ModalCategory'
 import styles from './categories.module.css'
+import { Updater } from 'use-immer'
 
 interface ICategoriesProps {
 	categories: ICategories[]
-	setCategory: React.Dispatch<React.SetStateAction<ICategories[]>>
+	setCategory: Updater<ICategories[]>
 	setNameOfCategory: React.Dispatch<React.SetStateAction<string>>
 }
 
-const Categories: FC<ICategoriesProps> = React.memo(({
+const Categories: FC<ICategoriesProps> = ({
 	categories,
 	setCategory,
 	setNameOfCategory,
 }) => {
 	const [isModal, setIsModal] = React.useState<boolean>(false)
-	const CATEGORY_ID = React.useRef<number>(0)
+	const CATEGORY_ID = React.useRef<number>(1)
 
 	function selectCategory(e: React.MouseEvent<HTMLUListElement>) {
 		const target = e.target as HTMLElement | null
@@ -42,7 +43,7 @@ const Categories: FC<ICategoriesProps> = React.memo(({
 		const nameCategory = parentLi.querySelector('span')?.textContent ?? ''
 		const category = searchCategory(nameCategory, categories)
 
-		setCategory((prev) => prev.filter((item) => item.id !== category?.id))
+		setCategory((draft) => draft.filter((item) => item.id !== category?.id))
 		setNameOfCategory('')
 	}
 
@@ -50,19 +51,18 @@ const Categories: FC<ICategoriesProps> = React.memo(({
 		<div className={styles.categories}>
 			<h2 className={styles.title}>Категории</h2>
 			<ul className={styles.list} onClick={selectCategory}>
-				<li><span>Completed</span></li>
 				{categories
 					? categories.map(item => {
 							return(
 								<li key={item.id}>
 									<span>{item.name}</span>
-									<img 
+									{item.name !== 'Completed' ?<img 
 									src="/deleteIcon.svg" 
 									alt="deleteIcon" 
 									width='24' 
 									height='24'
 									onClick={removeCategory}
-									/>
+									/> : null}
 								</li>
 							)
 					  })
@@ -85,6 +85,16 @@ const Categories: FC<ICategoriesProps> = React.memo(({
 			</div>
 		</div>
 	)
-})
+}
 
-export default Categories
+function memoCategories(prevProps: ICategoriesProps, nextProps: ICategoriesProps): boolean {
+	if(prevProps.categories.length < nextProps.categories.length || prevProps.categories.length > nextProps.categories.length)
+		return false
+	if(JSON.stringify(prevProps.categories) !== JSON.stringify(nextProps.categories))
+		return false
+	return true
+}
+
+
+export const MemoizedCategories = React.memo(Categories, memoCategories)
+

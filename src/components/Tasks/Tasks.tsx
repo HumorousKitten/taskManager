@@ -3,24 +3,25 @@ import { ICategories, ITasks } from '../../types/types'
 import { Button } from '../button/Button'
 import { ModalTasks } from '../Modal/ModalTasks'
 import styles from './tasks.module.css'
+import { Updater } from 'use-immer'
 
 interface ITasksProps {
 	category: string
 	categories: ICategories[]
-	setCategory: React.Dispatch<React.SetStateAction<ICategories[]>>
+	setCategory: Updater<ICategories[]>
 }
 
 const Tasks: FC<ITasksProps> = React.memo(({ category, categories, setCategory }) => {
 	const [isModal, setIsModal] = React.useState<boolean>(false)
 	const TASK_ID = React.useRef<number>(0)
-	const completeTask = React.useRef<ITasks[]>([])
 
+	console.log(categories)
 	function searchTaskById(id: number, task: ITasks[]) {
 		return task.find(task => task.id === id)
 	}
 
 	function searchCategory(name: string, categories: ICategories[]) {
-		return categories.find(item => item.name === name)
+		return categories.find(item => item.name === name) 
 	}
 
 	function removeTask(e: React.MouseEvent<HTMLImageElement>) {
@@ -37,17 +38,17 @@ const Tasks: FC<ITasksProps> = React.memo(({ category, categories, setCategory }
 		) as ICategories
 
 		const deletedTask = searchTaskById(+idTask, necessaryCategory.tasks)
+		const allNecessaryTask = necessaryCategory.tasks.filter(
+			item => item.id !== deletedTask?.id
+		)
 
-		setCategory(prev => {
-			const allNecessaryTask = necessaryCategory.tasks.filter(
-				item => item.id !== deletedTask?.id
-			)
-			necessaryCategory.tasks = allNecessaryTask
-			return prev.filter(item => {
-				if (item.id === necessaryCategory.id) return necessaryCategory
-				return item
-			})
-		})
+		setCategory(draft => {
+				const tmpCategory = draft.find(item => item.id === necessaryCategory.id)
+				if(tmpCategory) {
+					tmpCategory.tasks = allNecessaryTask
+				}
+			}
+		)
 	}
 
 	function nameTaskValidate(value: string): boolean {
@@ -62,29 +63,24 @@ const Tasks: FC<ITasksProps> = React.memo(({ category, categories, setCategory }
 		if (!parentLi) return
 
 		const idTask = parentLi.querySelector('span:first-child')?.textContent ?? ''
+
 		const taskName = parentLi.querySelector(
 			'span:last-child'
 		) as HTMLSpanElement
 		taskName?.setAttribute('contenteditable', 'true')
-		const necessaryCategory = searchCategory(
-			category,
-			categories
-		) as ICategories
-		const editedTask = searchTaskById(+idTask, necessaryCategory.tasks)
-		if (!editedTask) return
+
+		const necessaryCategory = searchCategory(category, categories) as ICategories
 
 		function handleEdit(e: KeyboardEvent) {
 			if (e.key === 'Enter') {
 				if (nameTaskValidate(taskName.textContent ?? '')){
-					if (editedTask) editedTask.title = taskName.textContent as string
-					let index = necessaryCategory.tasks.findIndex(
-						item => item.id === editedTask?.id
-					)
-					necessaryCategory.tasks[index] = editedTask as ITasks
-					setCategory(prev => {
-						index = prev.findIndex(item => item.id === necessaryCategory.id)
-						prev[index] = necessaryCategory
-						return Array.from(prev)
+					setCategory(draft => {
+						const category = draft.find(item => item.id === necessaryCategory.id)
+						if(category){
+							const willEditedTask = searchTaskById(+idTask, category.tasks as ITasks[])
+							if(willEditedTask) willEditedTask.title = taskName.textContent as string
+							category.tasks = category.tasks.map((item) => item.id === willEditedTask?.id ? willEditedTask : item)
+						}
 					})
 					taskName?.setAttribute('contenteditable', 'false')
 				}
@@ -100,23 +96,14 @@ const Tasks: FC<ITasksProps> = React.memo(({ category, categories, setCategory }
 		if (!parentLi) return
 
 		const idTask = parentLi.querySelector('span:first-child')?.textContent ?? ''
-		const necessaryCategory = searchCategory(
-			category,
-			categories
-		) as ICategories
-		const completedTask = searchTaskById(+idTask, necessaryCategory.tasks)
-		if (!completedTask) return
-		completedTask.isCompleted = true
-		completeTask.current.push(completedTask)
-		let index = necessaryCategory.tasks.findIndex(
-			item => item.id === completedTask.id
-		)
-		necessaryCategory.tasks[index] = completedTask
+		const necessaryCategory = searchCategory(category, categories) as ICategories
 
-		setCategory(prev => {
-			index = prev.findIndex(item => item.id === necessaryCategory.id)
-			prev[index] = necessaryCategory
-			return Array.from(prev)
+		setCategory(draft => {
+			const category = draft.find(item => item.id === necessaryCategory.id)
+			const willCompletedTask = searchTaskById(+idTask, category?.tasks as ITasks[])
+			if(willCompletedTask) {
+				willCompletedTask.isCompleted = true
+			}
 		})
 	}
 
@@ -159,7 +146,9 @@ const Tasks: FC<ITasksProps> = React.memo(({ category, categories, setCategory }
 									</li>
 								) : null
 							)
-					: completeTask.current ? completeTask.current.map((completedTask) => <li key={completedTask.id}>{completedTask.title}</li>) : null}
+					: category ? categories.map((categoryItem) => (
+						categoryItem.tasks.map(tasks => tasks.isCompleted ? <li key={tasks.id}>{tasks.title}</li> : null)
+					)) : null}
 			</ul>
 
 			<div className={styles.addCategory}>
@@ -180,6 +169,17 @@ const Tasks: FC<ITasksProps> = React.memo(({ category, categories, setCategory }
 			</div>
 		</div>
 	)
-})
+}, memoizedTasks)
+
+function memoizedTasks(prevProps: ITasksProps, nextProps: ITasksProps): boolean{
+	if(prevProps.category !== nextProps.category)
+		return false
+	if((prevProps.categories.length < nextProps.categories.length || prevProps.categories.length > nextProps.categories.length))
+		return false
+	if(JSON.stringify(prevProps.categories) !== JSON.stringify(nextProps.categories))
+		return false
+	return true
+}
+
 
 export default Tasks
